@@ -12,12 +12,5 @@ public class Heffalump extends Animal implements CanFall {
     public void fall(Place place) {
         System.out.println(this.name + " упал в " + place.getName());
     }
-    @Override
-    public void die() {
-        System.out.println(this.name + " погибает.");
-    }
-    @Override
-    public void noticed() {
-        System.out.println(this.name + " замечает яму и обходит её.");
-    }
+
 }

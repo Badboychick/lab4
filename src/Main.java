@@ -1,3 +1,4 @@
+import Enums.BodyPart;
 import Enums.Distance;
 import Enums.Place;
 import Objects.Weather;
@@ -16,40 +17,36 @@ public class Main {
 
         piglet.say("это, конечно, очень хорошая ", "NamePrefix");
         System.out.print(Place.Trap.getName());
-        piglet.say(", но что, если пойдёт дождь?", "-say");
+        piglet.say(", но что, если пойдёт дождь?", "WithoutSay");
         int rain_enabled = rand.nextInt(2);
-        puh.scratch("свой нос");
+        puh.scratch(BodyPart.Nose);
         puh.notthink();
         int elephant_attentiveness = rand.nextInt(101);
         if (rain_enabled == 1) {
             rain.started();
             puh.shine();
             puh.say("""
-                    "Слонопотам, посмотри на небо!"
+                    : "Слонопотам, посмотри на небо!"
                     """, "Name");
             elephant.look(Place.Sky);
-            int rainfallStop = rand.nextInt(101);
+            int rainfallStop = rand.nextInt(2);
             if (rainfallStop == 0) {
-                elephant.say(": Дождь не закончится, мы обречены", "");
-            }
-            if (rainfallStop >= 0 && rainfallStop < 50) {
                 elephant.say(": Дождь будет идти ещё долго", "");
             }
-            if (rainfallStop >= 50 && rainfallStop <=99) {
+            if (rainfallStop == 1) {
                 elephant.say(": Дождь скоро закончится", "");
             }
-            if (rainfallStop > 99) {
-                elephant.say(": Дождь уже закончился", "");
-            }
-            piglet.say(Place.Hole.getName() + " " + Distance.Near.getName() + ". Слонопотам, осторожно!", "NamePrefix");
+            piglet.warn(Place.Hole, Distance.Near);
             if (elephant_attentiveness == 0) {
-                elephant.die();
+                elephant.fall(Place.Hole);
+                elephant.hurt(80);
             }
             else if (elephant_attentiveness >= 50) {
-                elephant.noticed();
+                elephant.noticed(Place.Hole);
             }
             else if (elephant_attentiveness < 50) {
                 elephant.fall(Place.Hole);
+                elephant.hurt(20);
             }
         }
         else {

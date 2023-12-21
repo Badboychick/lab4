@@ -1,5 +1,5 @@
 package Interfaces;
-
+import Enums.BodyPart;
 public interface CanScratch {
-    void scratch(String body_part);
+    void scratch(BodyPart body_part);
 }

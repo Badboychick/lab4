@@ -1,32 +1,36 @@
 package Objects;
 
+import Enums.Distance;
 import Enums.Gender;
 import Enums.Place;
 
 import java.util.Objects;
 
 public abstract class Animal {
-    protected String name;
-    private String ending;
-    private Gender gender;
-    protected Place place = null;
+    protected final String name;
+    private String name_ending;
+    private final Gender gender;
+    private Integer hp;
+    public void makeNameEnding(Gender gender) {
+        switch (gender) {
+            case Male:
+                name_ending = "";
+                break;
+            case Female:
+                name_ending = "а";
+                break;
+            case Third:
+                name_ending = "о";
+                break;
+            case Plural:
+                name_ending = "и";
+        }
+    }
     public Animal(String name, Gender gender) {
         this.name = name;
         this.gender = gender;
-        switch (gender) {
-            case Male:
-                this.ending = "";
-                break;
-            case Female:
-                this.ending = "а";
-                break;
-            case Third:
-                this.ending = "о";
-                break;
-            case Plural:
-                this.ending = "и";
-                break;
-        }
+        this.hp = 100;
+        makeNameEnding(gender);
     }
 
     public String getName() {
@@ -42,7 +46,7 @@ public abstract class Animal {
             return false;
         }
         Animal animal = (Animal) obj;
-        return Objects.equals(name, animal.name);
+        return (Objects.equals(name, animal.name) && Objects.equals(hp, animal.hp) && Objects.equals(gender, animal.gender));
     }
 
     @Override
@@ -57,29 +61,46 @@ public abstract class Animal {
                 "name='" + name + '\'' +
                 '}';
     }
+    public void die() {
+        this.hp = 0;
+        System.out.println(this.name + " погибает.");
+    }
     public void look(Place place) {
         System.out.print(this.name + " посмотрел на " + place.getName());
     }
     public void say(String line, String mode) {
         switch (mode) {
             case "Name":
-                System.out.println(getName() + " сказал" + ending + " " + line);
+                System.out.println(getName() + " сказал" + name_ending + " " + line);
                 break;
             case "NamePrefix":
-                System.out.println(getName() + " сказал" + ending + ", что "+ line);
+                System.out.println(getName() + " сказал" + name_ending + ", что "+ line);
                 break;
             case "Prefix":
-                System.out.println(" сказал" + ending + ", что "+ line);
+                System.out.println(" сказал" + name_ending + ", что "+ line);
                 break;
             case "":
-                System.out.println(" сказал" + ending + line);
+                System.out.println(" сказал" + name_ending + line);
                 break;
-            case "-say":
+            case "WithoutSay":
                 System.out.println(line);
                 break;
         }
     }
+    public void hurt(Integer hp) {
+        System.out.println(getName() + " потерял" + name_ending + " "+ hp + " очков здоровья");
+        this.hp -= hp;
+        if (this.hp <= 0) {
+            die();
+        }
+    }
+    public void noticed(Place place) {
+        System.out.println(this.name + " замечает " + place.getName());
+    }
+    public void warn(Place place, Distance distance) {
+        System.out.println(this.name + " предупреждает: " + place.getName() + " " + distance.getName() + "!");
+    }
     public void shine() {
-        System.out.println(getName() + " просиял" + ending);
+        System.out.println(getName() + " просиял" + name_ending);
     }
 }
