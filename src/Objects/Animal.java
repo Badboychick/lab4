@@ -3,6 +3,7 @@ package Objects;
 import Enums.Distance;
 import Enums.Gender;
 import Enums.Place;
+import Enums.SpeechMode;
 
 import java.util.Objects;
 
@@ -10,7 +11,8 @@ public abstract class Animal {
     protected final String name;
     private String name_ending;
     private final Gender gender;
-    private Integer hp;
+    protected Integer hp;
+    protected Integer karma;
     public void makeNameEnding(Gender gender) {
         switch (gender) {
             case Male:
@@ -29,6 +31,7 @@ public abstract class Animal {
     public Animal(String name, Gender gender) {
         this.name = name;
         this.gender = gender;
+        this.karma = 0;
         this.hp = 100;
         makeNameEnding(gender);
     }
@@ -46,7 +49,7 @@ public abstract class Animal {
             return false;
         }
         Animal animal = (Animal) obj;
-        return (Objects.equals(name, animal.name) && Objects.equals(hp, animal.hp) && Objects.equals(gender, animal.gender));
+        return (Objects.equals(name, animal.name) && Objects.equals(hp, animal.hp) && Objects.equals(gender, animal.gender) && Objects.equals(karma, animal.karma));
     }
 
     @Override
@@ -59,6 +62,8 @@ public abstract class Animal {
         return "Objects.Animal{" +
                 ", sex=" + gender + '\'' +
                 "name='" + name + '\'' +
+                "karma='" + karma + '\'' +
+                "hp='" + hp + '\'' +
                 '}';
     }
     public void die() {
@@ -68,27 +73,27 @@ public abstract class Animal {
     public void look(Place place) {
         System.out.print(this.name + " посмотрел на " + place.getName());
     }
-    public void say(String line, String mode) {
+    public void say(String line, SpeechMode mode) {
         switch (mode) {
-            case "Name":
+            case Name:
                 System.out.println(getName() + " сказал" + name_ending + " " + line);
                 break;
-            case "NamePrefix":
+            case NamePrefix:
                 System.out.println(getName() + " сказал" + name_ending + ", что "+ line);
                 break;
-            case "Prefix":
+            case Prefix:
                 System.out.println(" сказал" + name_ending + ", что "+ line);
                 break;
-            case "":
+            case None:
                 System.out.println(" сказал" + name_ending + line);
                 break;
-            case "WithoutSay":
+            case WithoutSay:
                 System.out.println(line);
                 break;
         }
     }
     public void hurt(Integer hp) {
-        System.out.println(getName() + " потерял" + name_ending + " "+ hp + " очков здоровья");
+        System.out.println(getName() + " потерял" + name_ending + " " + hp + " очков здоровья");
         this.hp -= hp;
         if (this.hp <= 0) {
             die();
@@ -99,6 +104,15 @@ public abstract class Animal {
     }
     public void warn(Place place, Distance distance) {
         System.out.println(this.name + " предупреждает: " + place.getName() + " " + distance.getName() + "!");
+        this.karma += 10;
+    }
+    public void push_elephant(Place place) {
+        System.out.println(this.name + " толкает Слонопотама в " + place.getName() + "!");
+        this.karma -= 40;
+        if (karma <= -100) {
+            System.out.println(this.name + " теряет 50 единиц здоровья.\n" + this.name + " оказался подлецом и получил по заслугам");
+            this.hp -= 50;
+        }
     }
     public void shine() {
         System.out.println(getName() + " просиял" + name_ending);

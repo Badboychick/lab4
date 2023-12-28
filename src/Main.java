@@ -1,7 +1,7 @@
 import Enums.BodyPart;
 import Enums.Distance;
 import Enums.Place;
-import Objects.Weather;
+import Enums.SpeechMode;
 import Objects.WinnieThePooh;
 import Objects.Heffalump;
 import Objects.Piglet;
@@ -12,36 +12,29 @@ public class Main {
         WinnieThePooh puh = new WinnieThePooh();
         Piglet piglet = new Piglet();
         Heffalump elephant = new Heffalump();
-        Weather rain = new Weather("дождик");
         Random rand = new Random();
 
-        piglet.say("это, конечно, очень хорошая ", "NamePrefix");
-        System.out.print(Place.Trap.getName());
-        piglet.say(", но что, если пойдёт дождь?", "WithoutSay");
+        piglet.say("это, конечно, очень хорошая " + Place.Trap.getName() + ", но что, если пойдёт дождь?", SpeechMode.NamePrefix);
         int rain_enabled = rand.nextInt(2);
         puh.scratch(BodyPart.Nose);
         puh.notthink();
         int elephant_attentiveness = rand.nextInt(101);
         if (rain_enabled == 1) {
-            rain.started();
             puh.shine();
             puh.say("""
                     : "Слонопотам, посмотри на небо!"
-                    """, "Name");
+                    """, SpeechMode.Name);
             elephant.look(Place.Sky);
             int rainfallStop = rand.nextInt(2);
             if (rainfallStop == 0) {
-                elephant.say(": Дождь будет идти ещё долго", "");
+                elephant.say(": Дождь будет идти ещё долго", SpeechMode.None);
+                piglet.push_elephant(Place.Trap);
             }
-            if (rainfallStop == 1) {
-                elephant.say(": Дождь скоро закончится", "");
+            else if (rainfallStop == 1) {
+                elephant.say(": Дождь скоро закончится", SpeechMode.None);
             }
             piglet.warn(Place.Hole, Distance.Near);
-            if (elephant_attentiveness == 0) {
-                elephant.fall(Place.Hole);
-                elephant.hurt(80);
-            }
-            else if (elephant_attentiveness >= 50) {
+            if (elephant_attentiveness >= 50) {
                 elephant.noticed(Place.Hole);
             }
             else if (elephant_attentiveness < 50) {
@@ -50,7 +43,10 @@ public class Main {
             }
         }
         else {
-            elephant.say("дождя нет, жизнь прекрасна!", "NamePrefix");
+            elephant.say("дождя нет, жизнь прекрасна!", SpeechMode.NamePrefix);
+            piglet.say("тут становится довольно холодно", SpeechMode.NamePrefix);
+            piglet.freeze();
+            puh.push_elephant(Place.Trap);
         }
     }
 }
