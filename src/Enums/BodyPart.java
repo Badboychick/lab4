@@ -1,9 +1,9 @@
 package Enums;
 
 public enum BodyPart {
-    Head("голову"),
+    Head("голова"),
     Nose("нос"),
-    Ear("за ухом");
+    Ear("ухо");
     private final String bodyPart;
     BodyPart(String bodyPart) {
         this.bodyPart = bodyPart;
