@@ -29,10 +29,10 @@ public abstract class Character implements Moveable {
     public void addKarmaPoints(int karma) throws CannotAddThisAmount {
         this.karma += karma;
         if (karma > 0) {
-            System.out.println(this.getName() + "получает " + karma + " очков кармы. На данный момент у этого персонажа " + this.karma + "очков кармы.");
+            System.out.println(this.getName() + " получает " + karma + " очков кармы. На данный момент у этого персонажа " + this.karma + " очков кармы.");
         }
         else if (karma < 0) {
-            System.out.println(this.getName() + "теряет " + karma + " очков кармы. На данный момент у этого персонажа " + this.karma + "очков кармы.");
+            System.out.println(this.getName() + " теряет " + karma + " очков кармы. На данный момент у этого персонажа " + this.karma + " очков кармы.");
         }
         else{
             throw new CannotAddThisAmount();
@@ -92,30 +92,34 @@ public abstract class Character implements Moveable {
             throw new CannotDieTwice();
         }
     }
-    public void say(String line, SpeechMode mode) {
-        switch (mode) {
-            case Name:
-                System.out.println(getName() + " сказал" + name_ending + " " + line);
-                break;
-            case NamePrefix:
-                System.out.println(getName() + " сказал" + name_ending + ", что "+ line);
-                break;
-            case Prefix:
-                System.out.println(" сказал" + name_ending + ", что "+ line);
-                break;
-            case None:
-                System.out.println(" сказал" + name_ending + line);
-                break;
-            case WithoutSay:
-                System.out.println(line);
-                break;
+    public void say(String line, SpeechMode mode) throws CannotDoThisAction{
+        if (hp > 0) {
+            switch (mode) {
+                case Name:
+                    System.out.println(getName() + " сказал" + name_ending + " " + line);
+                    break;
+                case NamePrefix:
+                    System.out.println(getName() + " сказал" + name_ending + ", что " + line);
+                    break;
+                case Prefix:
+                    System.out.println(" сказал" + name_ending + ", что " + line);
+                    break;
+                case None:
+                    System.out.println(" сказал" + name_ending + line);
+                    break;
+                case WithoutSay:
+                    System.out.println(line);
+                    break;
+            }
+        } else {
+            throw new CannotDoThisAction();
         }
     }
     public void hurt(Integer hp) throws CannotDieTwice {
         if (this.hp > 0) {
             System.out.println(getName() + " потерял" + name_ending + " " + hp + " очков здоровья");
             this.hp -= hp;
-            if (this.hp <= 0) {
+            if ((this.hp -=hp) <= 0) {
                 die();
             }
         }
@@ -123,23 +127,32 @@ public abstract class Character implements Moveable {
             throw new CannotDieTwice();
         }
     }
-    public void move(Place place) throws CannotAddThisAmount, CannotMove {
+    public void move(Place place) throws CannotAddThisAmount, CannotDoThisAction {
         boolean b = (this.hp > 0);
         if (b) {
             System.out.println(this.getName() + " прогулялся и пришёл в " + place.getName());
             this.setLocation(place);
             place.addExploredScore(30);
         } else {
-            throw new CannotMove();
+            throw new CannotDoThisAction();
         }
     }
 
-    public void push_friend(Character c, Trap trap) throws CannotDieTwice, CannotAddThisAmount {
-        System.out.println(this.name + " толкает " + c.getName() + " в " + trap.getName() + "!");
-        this.addKarmaPoints(-40);
-        if (karma <= -100) {
-            System.out.println(this.name + " оказался подлецом и получил по заслугам");
-            this.hurt(50);
+    public void push_friend(Character c, Trap trap) throws CannotDieTwice, CannotAddThisAmount, CannotDoThisAction {
+        if (hp != 0) {
+            if (trap.distance.getName() != null) {
+                System.out.println(this.name + " толкает " + c.getName() + " в " + trap.getName() + ", эта ловушка находится " + trap.distance.getName() + "!");
+            } else {
+                System.out.println(this.name + " толкает " + c.getName() + " в " + trap.getName() + "!");
+            }
+            this.addKarmaPoints(-40);
+            if (karma <= -100) {
+                System.out.println(this.name + " оказался подлецом и получил по заслугам");
+                this.hurt(50);
+            }
+        }
+        else {
+            throw new CannotDoThisAction();
         }
     }
 }

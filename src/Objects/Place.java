@@ -35,9 +35,9 @@ public class Place {
             throw new CannotAddThisAmount();
         }
     }
-    public void getExploredScore() {
+    public void printExploredScore() {
         if (this.exploredScore >= 100) {
-            System.out.println("Место " + this.getName() + "полностью исследовано.");
+            System.out.println("Место " + this.getName() + " полностью исследовано.");
         }
         System.out.println("Место " + this.getName() + " исследовано на " + this.exploredScore + "%");
     }
